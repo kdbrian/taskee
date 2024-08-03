@@ -1,0 +1,28 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Taskee" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="titleText">
+        <item name="android:fontFamily">@font/irishgrover</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="editorstyle">
+        <item name="fontFamily">@font/balsamiqsans</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="descriptionText">
+        <item name="android:fontFamily">@font/balsamiqsans</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Theme.Taskee" parent="Base.Theme.Taskee" >
+        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="statusBarScrim">#5B5C5C</item>-->
+        <item name="bottomInsetScrimEnabled">true</item>
+    </style>
+</resources>

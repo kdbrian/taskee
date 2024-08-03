@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/viewTasks">
+
+    <fragment
+        android:id="@+id/viewTasks"
+        android:name="io.junrdev.github.taskee.screens.ViewTasks"
+        android:label="viewtasks"
+        tools:layout="@layout/viewtasks" >
+        <action
+            android:id="@+id/action_viewTasks_to_viewTask"
+            app:destination="@id/viewTask" />
+        <action
+            android:id="@+id/action_viewTasks_to_addTask"
+            app:destination="@id/addTask" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTask"
+        android:name="io.junrdev.github.taskee.screens.AddTask"
+        android:label="addtaskitem"
+        tools:layout="@layout/addtaskitem" />
+    <fragment
+        android:id="@+id/editTask"
+        android:name="io.junrdev.github.taskee.screens.EditTask"
+        android:label="edittaskitem"
+        tools:layout="@layout/edittaskitem" />
+    <fragment
+        android:id="@+id/viewTask"
+        android:name="io.junrdev.github.taskee.screens.ViewTask"
+        android:label="viewsingletask"
+        tools:layout="@layout/viewsingletask" >
+        <action
+            android:id="@+id/action_viewTask_to_editTask"
+            app:destination="@id/editTask" />
+    </fragment>
+</navigation>
