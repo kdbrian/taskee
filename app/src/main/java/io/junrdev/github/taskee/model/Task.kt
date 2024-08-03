@@ -14,7 +14,7 @@ data class Task(
     val id: Long = 0L,
     var title: String,
     var description: String? = null,
-    var priority: Priority,
+    var priority: Priority? = null,
     var isDone: Boolean = false
 ) : Parcelable
 
@@ -44,5 +44,5 @@ class Converters {
     @TypeConverter
     fun fromPriority(priority: Priority): String = priority.prop
     @TypeConverter
-    fun toPriority(prop: String): Priority = Priority.get(prop)
+    fun toPriority(prop: String?): Priority? = prop?.let { Priority.get(it) }
 }

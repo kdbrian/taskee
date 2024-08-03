@@ -51,18 +51,18 @@ class EditTask : Fragment(R.layout.edittaskitem) {
             editor.setEditorFontColor(Color.BLACK)
             editor.setEditorHeight(300)
 
-                boldtext.setOnClickListener {
-                    editor.setBold()
-                }
+            boldtext.setOnClickListener {
+                editor.setBold()
+            }
 
-                italictext.setOnClickListener {
-                    editor.setItalic()
-                }
+            italictext.setOnClickListener {
+                editor.setItalic()
+            }
 
 
-                listtext.setOnClickListener {
-                    editor.setBullets()
-                }
+            listtext.setOnClickListener {
+                editor.setBullets()
+            }
         }
 
         arguments?.getParcelable("task", Task::class.java)?.let {

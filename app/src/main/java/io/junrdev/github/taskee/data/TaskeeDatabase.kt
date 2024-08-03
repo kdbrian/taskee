@@ -29,11 +29,8 @@ abstract class TaskeeDatabase : RoomDatabase() {
         private val MIG1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""
-                    
-                    ALTER TABLE Task ADD COLUMN
-                    
+                    ALTER TABLE Task ADD COLUMN priority TEXT
                 """.trimIndent())
-                db.beginTransaction()
             }
         }
 
