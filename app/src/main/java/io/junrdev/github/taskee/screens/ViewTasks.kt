@@ -21,7 +21,6 @@ import io.junrdev.github.taskee.adapter.TaskListAdapter
 import io.junrdev.github.taskee.data.TaskRepository
 import io.junrdev.github.taskee.data.TaskeeDatabase
 import io.junrdev.github.taskee.databinding.ViewtasksBinding
-import io.junrdev.github.taskee.model.Task
 
 class ViewTasks : Fragment(R.layout.viewtasks) {
 
@@ -41,9 +40,13 @@ class ViewTasks : Fragment(R.layout.viewtasks) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         taskRepository = TaskRepository(appDb = TaskeeDatabase.getRoomDb(requireContext()))
-        taskListAdapter = TaskListAdapter(taskRepository = taskRepository) {
-            findNavController().navigate(R.id.action_viewTasks_to_viewTask, bundleOf("task" to it))
-        }
+        taskListAdapter =
+            TaskListAdapter(context = requireContext(), taskRepository = taskRepository) {
+                findNavController().navigate(
+                    R.id.action_viewTasks_to_viewTask,
+                    bundleOf("task" to it)
+                )
+            }
 
         binding.apply {
             tasklist.apply {

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="task"
             type="io.junrdev.github.taskee.model.Task" />
@@ -16,17 +17,16 @@
         android:orientation="vertical"
         tools:context=".screens.EditTask">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:id="@+id/pickPriority"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/roundedcornersbg"
-            android:backgroundTint="@color/priorityNormal"
             android:orientation="horizontal"
+            app:cardCornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView4"
@@ -48,8 +48,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:ems="10"
-            android:text="@{task.title}"
             android:inputType="text"
+            android:text="@{task.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />

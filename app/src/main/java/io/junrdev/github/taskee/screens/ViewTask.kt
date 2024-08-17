@@ -42,10 +42,9 @@ class ViewTask : Fragment(R.layout.viewsingletask) {
         arguments?.getParcelable<Task>("task")?.let { tsk ->
             binding.apply {
                 task = tsk
-
                 deletetask.setOnClickListener {
                     CoroutineScope(Dispatchers.IO).launch {
-                        taskRepository.updateTask(tsk.copy(isDone = true))
+                        taskRepository.deleteTask(tsk)
                         withContext(Dispatchers.Main) {
                             Toast.makeText(requireContext(), "Task Deleted", Toast.LENGTH_SHORT)
                                 .show()

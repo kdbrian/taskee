@@ -20,7 +20,7 @@ interface TaskDao {
     @Query("SELECT * FROM TASK WHERE id= :id")
     suspend fun getTaskById(id : Long) : Task
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateTask(task: Task)
     @Delete
     suspend fun deleteTask(task: Task)

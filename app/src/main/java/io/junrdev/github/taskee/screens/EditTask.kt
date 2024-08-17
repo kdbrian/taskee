@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.getkeepsafe.taptargetview.TapTarget
@@ -19,6 +20,7 @@ import io.junrdev.github.taskee.R
 import io.junrdev.github.taskee.data.TaskRepository
 import io.junrdev.github.taskee.data.TaskeeDatabase
 import io.junrdev.github.taskee.databinding.EdittaskitemBinding
+import io.junrdev.github.taskee.model.Priority
 import io.junrdev.github.taskee.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +43,9 @@ class EditTask : Fragment(R.layout.edittaskitem) {
         binding = EdittaskitemBinding.inflate(inflater)
         return binding.root
     }
+
+    var priority : Priority = Priority.Normal
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,6 +76,16 @@ class EditTask : Fragment(R.layout.edittaskitem) {
             binding.apply {
                 task = it
                 editTextText2.setText(it.description)
+                tsk.priority?.let { p ->
+                    val bg = when(p){
+                        Priority.Normal -> R.color.priorityNormal
+                        Priority.Medium -> R.color.priorityMedium
+                        Priority.High -> R.color.priorityHigh
+                    }
+                    context?.let { ctx ->
+                        pickPriority.setCardBackgroundColor(ContextCompat.getColor(ctx, bg))
+                    }
+                }
                 tsk.description?.let { dsc ->
                     editor.setPlaceholder(Html.fromHtml(dsc).toString())
                 } ?: editor.setPlaceholder("Add some text")
@@ -127,6 +142,7 @@ class EditTask : Fragment(R.layout.edittaskitem) {
             }
         }
 
+
         binding.apply {
 
             updatetask.setOnClickListener {
@@ -136,6 +152,8 @@ class EditTask : Fragment(R.layout.edittaskitem) {
 
                         it.title = tt
                         it.description = desc
+                        it.priority = priority
+
 
                         CoroutineScope(Dispatchers.IO).launch {
                             val taskRepository =
@@ -159,30 +177,51 @@ class EditTask : Fragment(R.layout.edittaskitem) {
 
             pickPriority.setOnClickListener {
                 context?.let { ctx ->
+                    // Inflate the custom view
+                    val dialogView =
+                        LayoutInflater.from(ctx).inflate(R.layout.selectprioritydialog, null)
+
+                    // Create the dialog
                     val dialog = MaterialAlertDialogBuilder(ctx).apply {
-                        setView(R.layout.selectprioritydialog)
+                        setView(dialogView)
                         setOnDismissListener(DialogInterface::dismiss)
                         setCancelable(true)
                     }.create()
 
-                    dialog.let { dlg ->
-                        print("first here")
-                        dlg.findViewById<LinearLayout>(R.id.normal)?.setOnClickListener {
-                            dialog.dismiss()
-                            print("then here")
-                            pickPriority.setBackgroundColor(resources.getColor(R.color.priorityNormal))
-                        }
-                        dlg.findViewById<LinearLayout>(R.id.medium)?.setOnClickListener {
-                            dialog.dismiss()
-                            pickPriority.setBackgroundColor(resources.getColor(R.color.priorityMedium))
-                        }
-                        dlg.findViewById<LinearLayout>(R.id.high)?.setOnClickListener {
-                            dialog.dismiss()
-                            pickPriority.setBackgroundColor(resources.getColor(R.color.priorityHigh))
-                        }
-                        dialog.show()
+                    // Set click listeners on the views in the dialog
+                    dialogView.findViewById<LinearLayout>(R.id.normal)?.setOnClickListener {
+                        dialog.dismiss()
+                        pickPriority.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                ctx,
+                                R.color.priorityNormal
+                            )
+                        )
+                        priority = Priority.Normal
+                    }
+                    dialogView.findViewById<LinearLayout>(R.id.medium)?.setOnClickListener {
+                        dialog.dismiss()
+                        pickPriority.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                ctx,
+                                R.color.priorityMedium
+                            )
+                        )
+                        priority = Priority.Medium
+                    }
+                    dialogView.findViewById<LinearLayout>(R.id.high)?.setOnClickListener {
+                        dialog.dismiss()
+                        pickPriority.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                ctx,
+                                R.color.priorityHigh
+                            )
+                        )
+                        priority = Priority.High
                     }
 
+                    // Show the dialog
+                    dialog.show()
                 }
             }
 

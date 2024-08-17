@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.getkeepsafe.taptargetview.TapTarget
@@ -69,32 +70,55 @@ class AddTask : Fragment(R.layout.addtaskitem) {
                 editor.setBullets()
             }
 
+            var priority: Priority = Priority.Normal
+
             pickPriority.setOnClickListener {
                 context?.let { ctx ->
+                    // Inflate the custom view
+                    val dialogView =
+                        LayoutInflater.from(ctx).inflate(R.layout.selectprioritydialog, null)
+
+                    // Create the dialog
                     val dialog = MaterialAlertDialogBuilder(ctx).apply {
-                        setView(R.layout.selectprioritydialog)
+                        setView(dialogView)
                         setOnDismissListener(DialogInterface::dismiss)
                         setCancelable(true)
                     }.create()
 
-                    dialog.let { dlg ->
-                        print("first here")
-                        dlg.findViewById<LinearLayout>(R.id.normal)?.setOnClickListener {
-                            dialog.dismiss()
-                            print("then here")
-                            pickPriority.setBackgroundColor(resources.getColor(R.color.priorityNormal))
-                        }
-                        dlg.findViewById<LinearLayout>(R.id.medium)?.setOnClickListener {
-                            dialog.dismiss()
-                            pickPriority.setBackgroundColor(resources.getColor(R.color.priorityMedium))
-                        }
-                        dlg.findViewById<LinearLayout>(R.id.high)?.setOnClickListener {
-                            dialog.dismiss()
-                            pickPriority.setBackgroundColor(resources.getColor(R.color.priorityHigh))
-                        }
-                        dialog.show()
+                    // Set click listeners on the views in the dialog
+                    dialogView.findViewById<LinearLayout>(R.id.normal)?.setOnClickListener {
+                        dialog.dismiss()
+                        pickPriority.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                ctx,
+                                R.color.priorityNormal
+                            )
+                        )
+                        priority = Priority.Normal
+                    }
+                    dialogView.findViewById<LinearLayout>(R.id.medium)?.setOnClickListener {
+                        dialog.dismiss()
+                        pickPriority.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                ctx,
+                                R.color.priorityMedium
+                            )
+                        )
+                        priority = Priority.Medium
+                    }
+                    dialogView.findViewById<LinearLayout>(R.id.high)?.setOnClickListener {
+                        dialog.dismiss()
+                        pickPriority.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                ctx,
+                                R.color.priorityHigh
+                            )
+                        )
+                        priority = Priority.High
                     }
 
+                    // Show the dialog
+                    dialog.show()
                 }
             }
 
@@ -105,7 +129,7 @@ class AddTask : Fragment(R.layout.addtaskitem) {
                             Task(
                                 title = editTextText.text.toString(),
                                 description = desc,
-                                priority = Priority.Normal
+                                priority = priority
                             )
                         )
 

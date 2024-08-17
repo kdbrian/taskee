@@ -1,24 +1,30 @@
 package io.junrdev.github.taskee.adapter
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.junrdev.github.taskee.R
 import io.junrdev.github.taskee.adapter.TaskListAdapter.VH
 import io.junrdev.github.taskee.data.TaskRepository
 import io.junrdev.github.taskee.data.dao.TaskDao
+import io.junrdev.github.taskee.model.Priority
 import io.junrdev.github.taskee.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class TaskListAdapter(
+    val context: Context,
     val taskRepository: TaskRepository,
     private var taskList: MutableList<Task> = mutableListOf(),
     val onitemclicked: ((task: Task) -> Unit)
@@ -29,7 +35,7 @@ class TaskListAdapter(
     init {
         scope.launch {
             taskList = scope.async {
-                taskRepository.getAllTasks().sortedBy { it.isDone }.toMutableList()
+                taskRepository.getAllTasks().sortedBy { it.priority?.prop }.toMutableList()
             }.await()
 
             Log.d(TAG, "tasklist: $taskList")
@@ -39,9 +45,25 @@ class TaskListAdapter(
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val taskttile: TextView = view.findViewById(R.id.tasktitle)
-        val taskitem: LinearLayout = view.findViewById(R.id.taskitem)
+        val taskitem: CardView = view.findViewById(R.id.taskitem)
 
         fun bind(task: Task) {
+            Timber.d(task.priority?.prop)
+            task.priority?.let { p ->
+                val bg = when (p) {
+                    Priority.Normal -> ContextCompat.getColor(context, R.color.priorityNormal)
+                    Priority.Medium -> ContextCompat.getColor(context, R.color.priorityMedium)
+                    Priority.High -> ContextCompat.getColor(context, R.color.priorityHigh)
+                }
+
+                taskitem.setCardBackgroundColor(bg)
+            } ?: taskitem.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.priorityNormal
+                )
+            )
+
             taskttile.text = task.title
             taskitem.setOnClickListener {
                 onitemclicked.invoke(task)
@@ -75,7 +97,6 @@ class TaskListAdapter(
             taskRepository.updateTask(task)
             withContext(Dispatchers.Main) {
                 val task = taskList.removeAt(position)
-
                 if (task.isDone) {
                     taskList.add(task)
                     notifyItemMoved(position, taskList.size - 1)
